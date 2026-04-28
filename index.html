@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EV Demo – Zoom Contact Center</title>
+
+<style>
+/* ================= THEME ================= */
+:root {
+    --bg: #f8fafc;
+    --text: #0f172a;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --primary: #22c55e;
+    --nav: #ffffff;
+}
+
+[data-theme="dark"] {
+    --bg: #020617;
+    --text: #e5e7eb;
+    --card: #020617;
+    --border: #1e293b;
+    --nav: #020617;
+}
+
+/* ================= GLOBAL ================= */
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    transition: .3s;
+}
+
+a { text-decoration: none; color: inherit; }
+
+/* ================= NAV ================= */
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: var(--nav);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 32px;
+    z-index: 1000;
+}
+
+.logo {
+    font-weight: bold;
+    color: var(--primary);
+    font-size: 18px;
+}
+
+.nav-right {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+.toggle-theme {
+    cursor: pointer;
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+/* ================= HERO ================= */
+
+/* ================= White Mode =================
+https://plus.unsplash.com/premium_photo-1715639312136-56a01f236440?q=80&w=857&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+https://static.wixstatic.com/media/c837a6_02de7d4c43d44b7b890854049ed75da8f000.jpg/v1/fill/w_1024,h_840,al_c,q_85,usm_0.33_1.00_0.00,enc_avif,quality_auto/c837a6_02de7d4c43d44b7b890854049ed75da8f000.jpg
+
+*/
+.hero {
+    min-height: 100vh;
+    padding: 140px 10%;
+    background:
+        linear-gradient(rgba(255,255,255,.5), rgba(255,255,255,.5)),
+        url("images/ev6.png");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+}
+
+/* ================= Dark Mode ================= */
+[data-theme="dark"] .hero {
+    background:
+        linear-gradient(rgba(2,6,23,.65), rgba(2,6,23,.88)),
+        url("images/ev6.png");
+	background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+}
+
+.hero-content {
+    max-width: 720px;
+}
+
+.hero h1 {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.hero p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #475569;
+}
+
+[data-theme="dark"] .hero p {
+    color: #cbd5f5;
+}
+
+.btn {
+    margin-top: 24px;
+    display: inline-block;
+    padding: 14px 32px;
+    background: var(--primary);
+    border-radius: 999px;
+    font-size: 15px;
+    color: #052e16;
+}
+
+/* ================= SECTION ================= */
+.section {
+    padding: 100px 10%;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+    gap: 32px;
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 28px;
+}
+
+/* ================= SCROLL ANIMATION ================= */
+.fade {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: .8s ease;
+}
+.fade.show {
+    opacity: 1;
+    transform: none;
+}
+
+/* ================= CHAT POPUP ================= */
+#chat-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #1877f2;
+    color: #fff;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0,0,0,.3);
+}
+
+#chat-popup {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 800px;
+    height: 650px;
+    background: #fff;
+    border-radius: 12px;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 9999;
+    box-shadow: 0 8px 24px rgba(0,0,0,.3);
+}
+
+.chat-header {
+    height: 48px;
+    background: #1877f2;
+    color: #fff;
+    padding: 0 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-body {
+    flex: 1;
+    overflow: hidden;
+}
+
+.chat-body iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+    .hero h1 { font-size: 34px; }
+    nav { padding: 12px 20px; }
+    #chat-popup {
+        width: 95%;
+        right: 2.5%;
+        height: 70%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== NAV ===== -->
+<nav>
+    <div class="logo">EV DEMO</div>
+    <div class="nav-right">
+        <a href="#">Home</a>
+        <a href="#">Solutions</a>
+        <a href="#">Contact</a>
+        <div class="toggle-theme" id="themeToggle">🌙 Dark</div>
+    </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+    <div class="hero-content fade">
+        <h1>Electric Vehicle Experience Platform</h1>
+        <p>
+            Demo เว็บไซต์ EV ที่เชื่อมต่อ Zoom Contact Center
+            พร้อม Popup Chat บนหน้าเว็บ
+        </p>
+        <a class="btn">Request Demo</a>
+    </div>
+</section>
+
+<!-- ===== FEATURES ===== -->
+<section class="section">
+    <div class="cards">
+        <div class="card fade">
+            <h3>⚡ EV Innovation</h3>
+            <p>แพลตฟอร์มยานยนต์ไฟฟ้าแห่งอนาคต</p>
+        </div>
+        <div class="card fade">
+            <h3>📞 Zoom Contact Center</h3>
+            <p>Embedded Callbar / Popup Chat</p>
+        </div>
+        <div class="card fade">
+            <h3>☁️ Cloud Ready</h3>
+            <p>เหมาะสำหรับ Demo และ Production</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===== CHAT BUTTON ===== -->
+<button id="chat-toggle">🎧</button>
+
+<!-- ===== CHAT POPUP ===== -->
+<div id="chat-popup">
+    <div class="chat-header">
+        <span>Zoom Contact Center</span>
+        <button id="chat-minimize" style="background:none;border:none;color:#fff;font-size:18px;">–</button>
+    </div>
+
+    <div class="chat-body">
+        <iframe
+            src="https://zoom.us/cci/callbar/crm/?origin=https://g-able"
+            sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-scripts allow-same-origin allow-downloads"
+            allow="autoplay; microphone; camera; display-capture; encrypted-media; clipboard-write;"
+            id="zoom-embeddable-phone-iframe">
+        </iframe>
+
+    </div>
+</div>
+
+<!-- ================= JS ================= -->
+<script>
+/* Theme toggle */
+const toggleTheme = document.getElementById("themeToggle");
+toggleTheme.onclick = () => {
+    document.body.dataset.theme =
+        document.body.dataset.theme === "dark" ? "" : "dark";
+    toggleTheme.textContent =
+        document.body.dataset.theme === "dark" ? "☀ Light" : "🌙 Dark";
+};
+
+/* Popup toggle */
+const chatToggle = document.getElementById("chat-toggle");
+const chatPopup = document.getElementById("chat-popup");
+const chatMin = document.getElementById("chat-minimize");
+
+chatToggle.onclick = () => {
+    chatPopup.style.display = "flex";
+    chatToggle.style.display = "none";
+};
+
+chatMin.onclick = () => {
+    chatPopup.style.display = "none";
+    chatToggle.style.display = "block";
+};
+
+/* Scroll animation */
+const fades = document.querySelectorAll(".fade");
+const io = new IntersectionObserver(entries => {
+    entries.forEach(e => e.isIntersecting && e.target.classList.add("show"));
+});
+fades.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
